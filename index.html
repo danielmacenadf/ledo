@@ -44,7 +44,7 @@
   h1,h2,h3,h4{font-family:var(--ff-display);margin:0;font-weight:700;letter-spacing:0.01em;}
   p{margin:0;line-height:1.7;}
   section{position:relative;}
-  .container{width:min(1180px, 92%);margin:0 auto;}
+  .container{width:100%; max-width:1180px; margin:0 auto; padding-inline:24px;}
 
   ::selection{background:var(--gold-400);color:var(--navy-900);}
 
@@ -127,12 +127,16 @@
     transition:transform .25s ease, box-shadow .25s ease;
   }
   .nav-cta:hover{transform:translateY(-2px); box-shadow:0 12px 26px rgba(200,150,46,0.4);}
-  .nav-toggle{display:none; background:none; border:none; cursor:pointer; padding:6px;}
-  .nav-toggle span{display:block; width:24px; height:2px; background:var(--cream); margin:5px 0; transition:.3s;}
+  .nav-toggle{display:none; background:none; border:none; cursor:pointer; padding:8px; margin:-8px; z-index:1100; position:relative;}
+  .nav-toggle span{display:block; width:24px; height:2px; background:var(--cream); margin:5px 0; transition:transform .3s ease, opacity .3s ease;}
+  .nav-toggle.active span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .nav-toggle.active span:nth-child(2){opacity:0;}
+  .nav-toggle.active span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
 
   /* ---------- HERO ---------- */
   .hero{
     min-height:100vh;
+    min-height:100svh;
     display:flex; align-items:center; justify-content:center;
     position:relative; overflow:hidden;
     background:
@@ -288,10 +292,11 @@
     margin-top:10px; color:var(--ink-soft); font-size:0.9rem;
   }
   .service-card .detail{
-    max-height:0; overflow:hidden; transition:max-height .45s ease, margin-top .45s ease;
+    display:grid; grid-template-rows:0fr; transition:grid-template-rows .45s ease;
     font-size:0.88rem; color:var(--ink-soft);
   }
-  .service-card.open .detail{max-height:220px; margin-top:14px;}
+  .service-card .detail-inner{overflow:hidden;}
+  .service-card.open .detail{grid-template-rows:1fr; margin-top:14px;}
   .service-card .detail .trigger-line{
     margin-top:12px; padding-top:12px; border-top:1px solid rgba(10,31,63,0.1);
     color:var(--navy-700); font-style:italic; font-family:var(--ff-accent); font-size:1rem;
@@ -320,6 +325,7 @@
   }
   .stat-badge span{display:block; margin-top:6px; font-size:0.72rem; letter-spacing:0.12em; text-transform:uppercase; color:rgba(247,243,234,0.7);}
   .stats-col{display:grid; gap:18px;}
+  .stats-triple{grid-template-columns:repeat(3,1fr); margin-top:36px;}
   .agency-table{width:100%; border-collapse:collapse;}
   .agency-table th{
     text-align:left; font-family:var(--ff-body); font-size:0.7rem; letter-spacing:0.14em; text-transform:uppercase;
@@ -405,22 +411,106 @@
     .services-grid{grid-template-columns:repeat(2,1fr);}
     .testimonials{grid-template-columns:1fr;}
     .proof-grid{grid-template-columns:repeat(3,1fr);}
+    .footer-grid{grid-template-columns:1fr 1fr; row-gap:36px;}
+    .footer-brand{grid-column:1 / -1;}
   }
+
   @media (max-width:760px){
+    .container{padding-inline:20px;}
+
+    /* nav */
+    .nav-inner{position:relative;}
     nav.links{
-      position:fixed; inset:0 0 0 30%; top:0; height:100vh; background:rgba(7,21,39,0.98);
-      flex-direction:column; justify-content:center; align-items:flex-start; gap:26px; padding:40px;
-      transform:translateX(100%); transition:transform .4s ease; backdrop-filter:blur(6px);
+      position:fixed; inset:0; top:0; height:100dvh; width:min(320px,84vw); left:auto; right:0;
+      background:rgba(7,21,39,0.98);
+      flex-direction:column; justify-content:center; align-items:flex-start; gap:24px; padding:100px 40px 40px;
+      transform:translateX(100%); transition:transform .4s cubic-bezier(.4,0,.2,1); backdrop-filter:blur(6px);
+      box-shadow:-20px 0 50px rgba(0,0,0,0.4);
     }
     nav.links.open{transform:translateX(0);}
+    nav.links a{font-size:1rem; width:100%;}
+    .nav-cta{margin-top:8px; text-align:center; width:100%;}
     .nav-toggle{display:block;}
-    .services-grid{grid-template-columns:1fr;}
+    .nav-overlay{
+      position:fixed; inset:0; background:rgba(7,21,39,0.55); backdrop-filter:blur(2px);
+      opacity:0; pointer-events:none; transition:opacity .35s ease; z-index:999;
+    }
+    .nav-overlay.open{opacity:1; pointer-events:auto;}
+
+    /* hero */
+    .hero{padding-top:96px;}
+    .hero-inner{padding-bottom:56px; gap:14px;}
+    .hero-emblem-wrap{width:min(120px,26vw);}
+    .hero-subtitle{letter-spacing:0.26em;}
+    .hero-tagline{font-size:1.15rem; padding-inline:6px;}
+    .hero-badges span{font-size:0.68rem;}
+    .frame-corner{width:min(60vw,320px); height:min(60vw,320px); opacity:0.5;}
+
+    /* sections */
+    .section{padding:72px 0;}
+    .section-head{margin-bottom:44px;}
+
+    /* problem */
     .problem-grid{grid-template-columns:1fr;}
-    .proof-grid{grid-template-columns:1fr;}
-    .final-points{flex-direction:column; align-items:center; gap:14px;}
-    .section{padding:80px 0;}
-    .agency-table{font-size:0.85rem;}
+    .problem-item{padding:26px 24px;}
+    .problem-quote{font-size:1.22rem; margin-top:42px;}
+
+    /* services */
+    .services-grid{grid-template-columns:1fr; gap:16px;}
+    .service-card{padding:26px 22px 22px;}
+    .service-card .toggle{top:24px; right:20px;}
+
+    /* atuação nacional — table becomes stacked cards */
+    .stats-triple{grid-template-columns:1fr 1fr; gap:12px;}
+    .stat-badge{padding:20px 8px;}
+    .stat-badge strong{font-size:1.9rem;}
+    .agency-table thead{
+      position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;
+    }
+    .agency-table, .agency-table tbody, .agency-table tr, .agency-table td{display:block; width:100%;}
+    .agency-table tr{
+      margin-bottom:16px; border:1px solid rgba(247,243,234,0.14); padding:6px 18px;
+    }
+    .agency-table tr:last-child{margin-bottom:0;}
+    .agency-table td{border-bottom:1px solid rgba(247,243,234,0.08); padding:14px 0;}
+    .agency-table td:last-child{border-bottom:none;}
+    .agency-table td::before{
+      content:attr(data-label); display:block; font-size:0.65rem; letter-spacing:0.12em; text-transform:uppercase;
+      color:var(--gold-400); margin-bottom:6px; font-weight:600;
+    }
+
+    /* proof */
+    .proof-grid{grid-template-columns:1fr; gap:28px; max-width:280px; margin-inline:auto;}
+    .testimonials{grid-template-columns:1fr;}
+    .testimonial{padding:30px 26px;}
+
+    /* final cta */
+    .final-cta{padding:88px 0;}
+    .final-points{flex-direction:column; align-items:flex-start; gap:14px; max-width:320px; margin:36px auto;}
+
+    /* footer */
     .footer-grid{grid-template-columns:1fr; gap:34px;}
+    .footer-brand{grid-column:auto;}
+    .footer-bottom{flex-direction:column; align-items:flex-start; gap:8px;}
+
+    /* WhatsApp float safe area */
+    .wa-float{bottom:calc(18px + env(safe-area-inset-bottom)); right:18px; width:52px; height:52px;}
+  }
+
+  @media (max-width:480px){
+    .hero-title{font-size:2.2rem;}
+    .hero-tagline{font-size:1.05rem;}
+    .hero-badges{gap:8px 16px;}
+    .hero-ctas{flex-direction:column; width:100%;}
+    .hero-ctas .btn{width:100%; justify-content:center;}
+    .final-cta .btn{width:100%; justify-content:center;}
+    .btn{padding:15px 22px; font-size:0.82rem;}
+    .stats-triple{grid-template-columns:1fr; gap:10px;}
+    .section-head h2{font-size:1.55rem;}
+    .about-copy p.callout{font-size:1.12rem; padding-left:16px;}
+    .divider-diamond{width:min(200px,70%);}
+    .brand-text strong{font-size:0.94rem;}
+    .brand img{width:30px; height:30px;}
   }
 </style>
 </head>
@@ -448,6 +538,7 @@
       <span></span><span></span><span></span>
     </button>
   </div>
+  <div class="nav-overlay" id="navOverlay"></div>
 </header>
 
 <!-- ================= HERO ================= -->
@@ -564,7 +655,7 @@
       <span class="eyebrow">Atuação nacional</span>
       <h2 style="margin-top:16px; color:var(--cream); font-size:clamp(1.9rem,3vw,2.4rem);">Presença em todo o território brasileiro</h2>
       <p style="margin-top:20px; color:rgba(247,243,234,0.72);">Prestamos assessoria em âmbito federal e estadual, sempre em conformidade com a legislação vigente, portarias, instruções normativas, editais e demais atos normativos aplicáveis.</p>
-      <div class="stats-col" style="margin-top:36px; grid-template-columns:repeat(3,1fr); display:grid;">
+      <div class="stats-col stats-triple">
         <div class="stat-badge"><strong>26+DF</strong><span>Estados atendidos</span></div>
         <div class="stat-badge"><strong>3</strong><span>Esferas de atuação</span></div>
         <div class="stat-badge"><strong>11</strong><span>Frentes tributárias</span></div>
@@ -581,19 +672,19 @@
         </thead>
         <tbody>
           <tr>
-            <td>Processos administrativos fiscais</td>
-            <td>Negociação de débitos inscritos em Dívida Ativa</td>
-            <td>ICMS, IPVA, ITCMD</td>
+            <td data-label="Receita Federal">Processos administrativos fiscais</td>
+            <td data-label="PGFN">Negociação de débitos inscritos em Dívida Ativa</td>
+            <td data-label="Secretarias Estaduais">ICMS, IPVA, ITCMD</td>
           </tr>
           <tr>
-            <td>Fiscalizações e autuações</td>
-            <td>Parcelamentos e transações</td>
-            <td>Regimes especiais e benefícios</td>
+            <td data-label="Receita Federal">Fiscalizações e autuações</td>
+            <td data-label="PGFN">Parcelamentos e transações</td>
+            <td data-label="Secretarias Estaduais">Regimes especiais e benefícios</td>
           </tr>
           <tr>
-            <td>Compensações e restituições</td>
-            <td>Revisão de CAPAG</td>
-            <td>Processos administrativos tributários</td>
+            <td data-label="Receita Federal">Compensações e restituições</td>
+            <td data-label="PGFN">Revisão de CAPAG</td>
+            <td data-label="Secretarias Estaduais">Processos administrativos tributários</td>
           </tr>
         </tbody>
       </table>
@@ -780,9 +871,11 @@
       <h3>${s.title}</h3>
       <p class="teaser">${s.teaser}</p>
       <div class="detail">
-        <p>${s.detail}</p>
-        <p class="trigger-line">${s.trigger}</p>
-        <a class="cta-link" href="https://wa.me/5561999999999?text=${encodeURIComponent('Olá, quero saber mais sobre: ' + s.title)}" target="_blank" rel="noopener">${s.cta} →</a>
+        <div class="detail-inner">
+          <p>${s.detail}</p>
+          <p class="trigger-line">${s.trigger}</p>
+          <a class="cta-link" href="https://wa.me/5561999999999?text=${encodeURIComponent('Olá, quero saber mais sobre: ' + s.title)}" target="_blank" rel="noopener">${s.cta} →</a>
+        </div>
       </div>
     `;
     card.addEventListener('click', (e) => {
@@ -803,14 +896,19 @@
   // ---------- mobile menu ----------
   const navToggle = document.getElementById('navToggle');
   const navLinks = document.getElementById('navLinks');
-  navToggle.addEventListener('click', () => {
-    const open = navLinks.classList.toggle('open');
+  const navOverlay = document.getElementById('navOverlay');
+
+  function setMenu(open){
+    navLinks.classList.toggle('open', open);
+    navToggle.classList.toggle('active', open);
+    navOverlay.classList.toggle('open', open);
     navToggle.setAttribute('aria-expanded', open);
-  });
-  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-    navLinks.classList.remove('open');
-    navToggle.setAttribute('aria-expanded', false);
-  }));
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+  navToggle.addEventListener('click', () => setMenu(!navLinks.classList.contains('open')));
+  navOverlay.addEventListener('click', () => setMenu(false));
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
+  window.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
 
   // ---------- scroll reveal ----------
   const revealEls = document.querySelectorAll('.reveal');
